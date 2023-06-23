@@ -1,16 +1,19 @@
 pipeline
 {
  agent any
-    tools{
-        maven 'maven-3.5.0'
-    }
-  triggers {
+  tools
+  {
+     maven 'maven-3.5.0'
+  }
+  triggers
+  {
      pollSCM '* * * * *'
    }
-    environment{
-                  REGISTRY="kalpanadodla/service-registry"
-                  DOCKER_HUB_LOGIN= credentials('docker-hub')
-                 }
+  environment
+  {
+     REGISTRY="kalpanadodla/service-registry"
+     DOCKER_HUB_LOGIN= credentials('docker-hub')
+   }
      stages
      {
          stage('check-out')
@@ -39,8 +42,16 @@ pipeline
      {
          steps
           {
-              sh 'docker push kalpanadodla/service-registry:${BUILD_NUMBER}'
+              sh 'docker push $REGISTRY:${BUILD_NUMBER}'
           }
      }
-}
-}
+     stage('run-docker-image')
+      {
+          steps
+           {
+               sh 'docker pull $REGISTRY:${BUILD_NUMBER}'
+               sh 'docker container run -d -p 8761:8761 $REGISTRY:${BUILD_NUMBER}'
+           }
+      }
+   }
+ }
