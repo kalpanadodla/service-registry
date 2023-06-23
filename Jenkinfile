@@ -1,0 +1,40 @@
+pipeline
+{
+ agent any tools {Maven maven3.5.0}
+
+   triggers {
+     pollSCM '* * * * *'
+   }
+ stages{
+
+    stage('build-with-maven')
+    {
+     steps {
+        sh 'mvn clean compile install'
+     }
+    }
+     stage('build-with-maven')
+        {
+         steps {
+            sh 'mvn clean compile install'
+         }
+        }
+     stage('build-docker-image')
+        {
+         steps {
+            sh 'docker build -t cloud-config-server:${BUILD_NUMBER} -f target/docker-resources/Dockerfile target/'
+         }
+        }
+     stage('push-docker-image')
+     {
+      environment{
+       DOCKER_HUB_LOGIN= credentials('docker-hub')
+      }
+         steps
+          {
+                 sh 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
+                 sh 'docker build -t cloud-config-server:${BUILD_NUMBER} -f target/docker-resources/Dockerfile target/'
+              }
+     }
+}
+}
