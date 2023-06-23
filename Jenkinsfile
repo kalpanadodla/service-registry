@@ -1,44 +1,30 @@
 pipeline
 {
  agent any
-
     tools{
-
         maven 'maven-3.5.0'
-
     }
   triggers {
      pollSCM '* * * * *'
    }
-     stages{
-
-         stage('check-out'){
-
-             steps{
-
-             git 'https://github.com/kalpanadodla/service-registry.git'
-
+     stages
+     {
+         stage('check-out')
+         {
+             steps
+             {
+               git 'https://github.com/kalpanadodla/service-registry.git'
              }
-
          }
-
-       stage('build'){
-
-           steps{
-
-
-
-                   sh 'mvn clean install'
-
-
-
+       stage('build')
+       {
+           steps
+           {
+             sh 'mvn clean install '
            }
-
        }
-
-
      stage('build-docker-image')
-        {
+      {
         environment{
                DOCKER_HUB_LOGIN= credentials('docker-hub')
               }
@@ -49,11 +35,10 @@ pipeline
         }
      stage('push-docker-image')
      {
-
          steps
           {
-                   sh 'docker push kalpanadodla/service-registry:${BUILD_NUMBER}'
-              }
+              sh 'docker push kalpanadodla/service-registry:${BUILD_NUMBER}'
+          }
      }
 }
 }
