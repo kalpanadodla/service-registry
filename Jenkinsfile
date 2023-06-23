@@ -1,24 +1,42 @@
 pipeline
 {
- agent any tools {Maven maven3.5.0}
+ agent any
 
-   triggers {
+    tools{
+
+        maven 'maven-3.5.0'
+
+    }
+  triggers {
      pollSCM '* * * * *'
    }
- stages{
+     stages{
 
-    stage('build-with-maven')
-    {
-     steps {
-        sh 'mvn clean compile install'
-     }
-    }
-     stage('build-with-maven')
-        {
-         steps {
-            sh 'mvn clean compile install'
+         stage('check-out'){
+
+             steps{
+
+             git 'https://github.com/kalpanadodla/service-registry.git'
+
+             }
+
          }
-        }
+
+       stage('build'){
+
+           steps{
+
+
+
+                   sh 'mvn clean install'
+
+
+
+           }
+
+       }
+
+
      stage('build-docker-image')
         {
         environment{
