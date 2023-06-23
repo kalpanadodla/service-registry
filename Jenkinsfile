@@ -31,7 +31,7 @@ pipeline
       {
 
          steps {
-              sh 'docker login --username=$DOCKER_HUB_LOGIN_USR --password-stdin=$DOCKER_HUB_LOGIN_PSW'
+              sh 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
               sh 'docker build -t REGISTRY:${BUILD_NUMBER} .'
          }
         }
