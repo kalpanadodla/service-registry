@@ -7,6 +7,10 @@ pipeline
   triggers {
      pollSCM '* * * * *'
    }
+    environment{
+                  REGISTRY="kalpanadodla/service-registry"
+                  DOCKER_HUB_LOGIN= credentials('docker-hub')
+                 }
      stages
      {
          stage('check-out')
@@ -25,12 +29,10 @@ pipeline
        }
      stage('build-docker-image')
       {
-        environment{
-               DOCKER_HUB_LOGIN= credentials('docker-hub')
-              }
+
          steps {
               sh 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
-              sh 'docker build -t kalpanadodla/service-registry:${BUILD_NUMBER} .'
+              sh 'docker build -t REGISTRY:${BUILD_NUMBER} .'
          }
         }
      stage('push-docker-image')
